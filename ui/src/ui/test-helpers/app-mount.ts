@@ -2,6 +2,13 @@ import { afterEach, beforeEach } from "vitest";
 import "../app.ts";
 import type { OpenClawApp } from "../app.ts";
 
+type MountHarnessApp = OpenClawApp & {
+  client?: { stop: () => void } | null;
+  connected?: boolean;
+  hello?: unknown;
+  lastError?: string | null;
+};
+
 export function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
   const app = document.createElement("openclaw-app") as OpenClawApp;
@@ -9,6 +16,14 @@ export function mountApp(pathname: string) {
     // no-op: avoid real gateway WS connections in browser tests
   };
   document.body.append(app);
+  const mounted = app as MountHarnessApp;
+  // Browser tests exercise rendered UI behavior, not live gateway transport.
+  // Force a connected shell and neutralize any background client started by lifecycle hooks.
+  mounted.client?.stop();
+  mounted.client = null;
+  mounted.connected = true;
+  mounted.lastError = null;
+  mounted.hello = mounted.hello ?? {};
   return app;
 }
 

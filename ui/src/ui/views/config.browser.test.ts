@@ -214,7 +214,7 @@ describe("config view", () => {
     render(renderConfig(baseProps()), container);
 
     const tab = Array.from(container.querySelectorAll("button")).find(
-      (b) => b.textContent?.trim() === "All Settings",
+      (b) => b.textContent?.trim() === "Settings",
     );
     expect(tab?.classList.contains("active")).toBe(true);
   });

@@ -205,25 +205,24 @@ describe("chat view", () => {
     expect(container.textContent).not.toContain("New session");
   });
 
-  it("shows a new session button when aborting is unavailable", () => {
+  it("shows send button when aborting is unavailable", () => {
     const container = document.createElement("div");
-    const onNewSession = vi.fn();
+    const onSend = vi.fn();
     render(
       renderChat(
         createProps({
           canAbort: false,
-          onNewSession,
+          draft: "hello",
+          onSend,
         }),
       ),
       container,
     );
 
-    const newSessionButton = Array.from(container.querySelectorAll("button")).find(
-      (btn) => btn.textContent?.trim() === "New session",
-    );
-    expect(newSessionButton).not.toBeUndefined();
-    newSessionButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    expect(onNewSession).toHaveBeenCalledTimes(1);
-    expect(container.textContent).not.toContain("Stop");
+    const sendButton = container.querySelector<HTMLButtonElement>('button[title="Send"]');
+    expect(sendButton).not.toBeNull();
+    sendButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    expect(onSend).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('button[title="Stop"]')).toBeNull();
   });
 });
