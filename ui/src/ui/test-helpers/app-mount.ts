@@ -1,11 +1,12 @@
 import { afterEach, beforeEach } from "vitest";
 import "../app.ts";
 import type { OpenClawApp } from "../app.ts";
+import type { GatewayHelloOk } from "../gateway.ts";
 
 type MountHarnessApp = OpenClawApp & {
   client?: { stop: () => void } | null;
   connected?: boolean;
-  hello?: unknown;
+  hello?: GatewayHelloOk | null;
   lastError?: string | null;
 };
 
@@ -23,7 +24,7 @@ export function mountApp(pathname: string) {
   mounted.client = null;
   mounted.connected = true;
   mounted.lastError = null;
-  mounted.hello = mounted.hello ?? {};
+  mounted.hello = mounted.hello ?? null;
   return app;
 }
 
