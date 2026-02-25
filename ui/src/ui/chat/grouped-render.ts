@@ -3,6 +3,7 @@ import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import type { AssistantIdentity } from "../assistant-identity.ts";
 import { icons } from "../icons.ts";
 import { toSanitizedMarkdownHtml } from "../markdown.ts";
+import { openExternalUrlSafe } from "../open-external-url.ts";
 import { detectTextDirection } from "../text-direction.ts";
 import type { MessageGroup, ToolCard } from "../types/chat-types.ts";
 import { agentLogoUrl } from "../views/agents-utils.ts";
@@ -453,10 +454,7 @@ function renderMessageImages(images: ImageBlock[]) {
   }
 
   const openImage = (url: string) => {
-    const opened = window.open(url, "_blank", "noopener,noreferrer");
-    if (opened) {
-      opened.opener = null;
-    }
+    openExternalUrlSafe(url, { allowDataImage: true });
   };
 
   return html`
